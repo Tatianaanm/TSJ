@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante</title>
+    <style>
+        body {
+            background-color: paleturquoise;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: rgb(38, 0, 255);
+            margin-top: 30px;
+        }
+
+        header {
+            background: rgba(0, 68, 204, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 15px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 10px;
+            z-index: 1000;
+        }
+
+        header a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        header a:hover {
+            color: #ffeb3b;
+        }
+        
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Títulos principales del menú (Desayunos, Almuerzo, etc.) */
+        main > h2 {
+            color: #002699;
+            border-bottom: 2px solid #0044cc;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+
+        /* Tarjetas de cada producto con diseño mejorado y efectos */
+        section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 6px solid #0044cc;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        /* EFECTO AL PASAR EL MOUSE POR CADA SECTION */
+        section:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #2e7d32;
+        }
+
+        section h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        section p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: transform 0.4s ease;
+        }
+
+        /* Zoom en la imagen al hacer hover en la sección */
+        section:hover img {
+            transform: scale(1.04);
+        }
+
+        /* Estilo para los botones (tarjetas y carrito) */
+        section input[type="button"],
+        .carrito input[type="button"] {
+            background-color: #0044cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        section input[type="button"]:hover,
+        .carrito input[type="button"]:hover {
+            background-color: #002699;
+            transform: translateY(-2px);
+        }
+
+        /* Cuadro de información que aparece al tocar "Ver información" */
+        .info {
+            display: none;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #333;
+            font-size: 15px;
+        }
+
+        /* Carrito de compras */
+        .carrito {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 6px solid #2e7d32;
+        }
+
+        .carrito .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        .carrito .total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 15px 0;
+        }
+
+        .carrito input[type="text"] {
+            padding: 10px;
+            border: 1px solid #0044cc;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 70%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .carrito #btn-finalizar {
+            background-color: #2e7d32;
+        }
+
+        .carrito #btn-finalizar:hover {
+            background-color: #1b5e20;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #002699;
+            font-weight: bold;
+            margin-top: 40px;
+            border-top: 2px dashed rgba(0, 68, 204, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>RESTAURANTE MIGAJAS</h1>
+    
+    <header>
+        <a href="#desayunos">Desayunos</a>
+        <a href="#almuerzo">Almuerzos</a>
+        <a href="#merienda">Meriendas</a>
+        <a href="#cena">Cenas</a>
+        <a href="#carrito">Carrito (<span id="contador">0</span>)</a>
+    </header>
+
+    <main>
+        <h2 id="desayunos">Desayunos</h2>
+        <section class="t2">
+            <h3>Licuado con tostados</h3>
+            <p>Precio $10000</p>
+            <img src="licuado con tostadas.webp" width="400px" height="300px" alt="Licuado con tostados">
+            <br>
+            <div class="info">Licuado de frutas frescas acompañado de tostadas con manteca y mermelada.</div>
+            <input type="button" value="Ver información" onclick="verInfo(this)">
+            <input type="button" value="Agregar al carrito" onclick="agregar('Licuado con tostados', 10000)">
+        </section>
+
+        <h2 id="almuerzo">Almuerzo</h2>
+        <section>
+            <h3>Milanesa con puré</h3>
+            <p>Precio $15000</p>
+            <img src="milanesa con puré.png" width="400px" height="300px" alt="Milanesa con puré">
+            <br>
+            <div class="info">Milanesa de carne bien crocante con una porción generosa de puré de papas.</div>
+            <input type="button" value="Ver información" onclick="verInfo(this)">
+            <input type="button" value="Agregar al carrito" onclick="agregar('Milanesa con puré', 15000)">
+        </section>
+
+        <h2 id="merienda">Merienda</h2>
+        <section>
+            <h3>Medialunas con chocolatada</h3>
+            <p>Precio $6000</p>
+            <img src="chocolatada.jpg" width="400px" height="300px" alt="Chocolatada con medialunas">
+            <br>
+            <div class="info">Dos medialunas recién horneadas con un vaso de chocolatada bien fría o caliente.</div>
+            <input type="button" value="Ver información" onclick="verInfo(this)">
+            <input type="button" value="Agregar al carrito" onclick="agregar('Medialunas con chocolatada', 6000)">
+        </section>
+
+        <h2 id="cena">Cena</h2>
+        <section>
+            <h3>Panchos</h3>
+            <p>Precio $3000</p>
+            <img src="panchos.webp" width="400px" height="300px" alt="Panchos">
+            <br>
+            <div class="info">Pancho clásico con salchicha, pan blando y aderezos a elección.</div>
+            <input type="button" value="Ver información" onclick="verInfo(this)">
+            <input type="button" value="Agregar al carrito" onclick="agregar('Panchos', 3000)">
+        </section>
+
+        <h2 id="carrito">Tu carrito</h2>
+        <div class="carrito">
+            <div id="lista-carrito"></div>
+            <div class="total">Total: $<span id="total">0</span></div>
+            <input type="text" id="nombre" placeholder="Tu nombre">
+            <br>
+            <input type="button" id="btn-finalizar" value="Finalizar compra por WhatsApp" onclick="finalizarCompra()">
+            <input type="button" value="Vaciar carrito" onclick="vaciarCarrito()">
+        </div>
+    </main>
+
+    <footer>
+        <p>Página diseñada por guerrero, lucero y mansilla</p>
+    </footer>
+
+    <script>
+        // ================================================
+        // CAMBIAR ESTE NÚMERO POR EL TUYO (el que recibe el pedido)
+        // Formato Argentina: 549 + código de área sin 0 + número sin 15
+        // Ejemplo: 5493515551234
+        // ================================================
+        var NUMERO_WHATSAPP = "5493886698990";
+
+        // Lista donde se guardan los productos del carrito
+        var carrito = [];
+
+        // Muestra u oculta la información del plato
+        function verInfo(boton) {
+            var info = boton.parentElement.querySelector(".info");
+            if (info.style.display === "block") {
+                info.style.display = "none";
+                boton.value = "Ver información";
+            } else {
+                info.style.display = "block";
+                boton.value = "Ocultar información";
+            }
+        }
+
+        // Agrega un producto al carrito (si ya está, suma 1 a la cantidad)
+        function agregar(nombre, precio) {
+            for (var i = 0; i < carrito.length; i++) {
+                if (carrito[i].nombre === nombre) {
+                    carrito[i].cantidad++;
+                    mostrarCarrito();
+                    return;
+                }
+            }
+            carrito.push({ nombre: nombre, precio: precio, cantidad: 1 });
+            mostrarCarrito();
+        }
+
+        // Quita una unidad de un producto (si llega a 0, se elimina)
+        function quitar(indice) {
+            carrito[indice].cantidad--;
+            if (carrito[indice].cantidad === 0) {
+                carrito.splice(indice, 1);
+            }
+            mostrarCarrito();
+        }
+
+        // Vacía todo el carrito
+        function vaciarCarrito() {
+            carrito = [];
+            mostrarCarrito();
+        }
+
+        // Dibuja el carrito en pantalla y calcula el total
+        function mostrarCarrito() {
+            var lista = document.getElementById("lista-carrito");
+            var total = 0;
+            var cantidadTotal = 0;
+            var html = "";
+
+            if (carrito.length === 0) {
+                html = "<p>El carrito está vacío.</p>";
+            }
+
+            for (var i = 0; i < carrito.length; i++) {
+                var subtotal = carrito[i].precio * carrito[i].cantidad;
+                total += subtotal;
+                cantidadTotal += carrito[i].cantidad;
+                html += '<div class="item">' +
+                        '<span>' + carrito[i].cantidad + ' x ' + carrito[i].nombre + ' - $' + subtotal + '</span>' +
+                        '<input type="button" value="Quitar 1" onclick="quitar(' + i + ')">' +
+                        '</div>';
+            }
+
+            lista.innerHTML = html;
+            document.getElementById("total").textContent = total;
+            document.getElementById("contador").textContent = cantidadTotal;
+        }
+
+        // Arma el mensaje y abre WhatsApp con el pedido listo para enviar
+        function finalizarCompra() {
+            if (carrito.length === 0) {
+                alert("Tu carrito está vacío. Agregá algún producto primero.");
+                return;
+            }
+
+            var nombre = document.getElementById("nombre").value.trim();
+            if (nombre === "") {
+                nombre = "un cliente";
+            }
+
+            var mensaje = "Hola! Soy " + nombre + " y quiero hacer este pedido en Restaurante Migajas:\n\n";
+            var total = 0;
+
+            for (var i = 0; i < carrito.length; i++) {
+                var subtotal = carrito[i].precio * carrito[i].cantidad;
+                total += subtotal;
+                mensaje += "- " + carrito[i].cantidad + " x " + carrito[i].nombre + " ($" + subtotal + ")\n";
+            }
+
+            mensaje += "\nTotal: $" + total;
+
+            var url = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
+            window.open(url, "_blank");
+        }
+
+        // Muestra el carrito vacío al cargar la página
+        mostrarCarrito();
+    </script>
+
+</body>
+</html>
